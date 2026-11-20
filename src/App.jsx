@@ -4,6 +4,33 @@ import { profile, skills, experience, projects, education, certs } from './data.
 const nav = ['About', 'Experience', 'Projects', 'Skills', 'Education', 'Contact']
 const roles = ['Backend Developer', 'Python Developer', 'Full Stack Developer', 'ML Enthusiast']
 
+// Live projects. If a project in data.js has a name containing `match`, the live link is attached to it.
+// Otherwise it is added as a new card at the top. Add a `link:` line to show a GitHub button too.
+const liveProjects = [
+  {
+    match: 'EduPredict',
+    name: 'EduPredict: AI Student Performance Prediction',
+    text: 'A web app that predicts student performance from academic and behavioural inputs using a trained machine learning model. First load may take a moment.',
+    stack: ['Python', 'Scikit-learn'],
+    live: 'https://edupredict-1-74el.onrender.com/index.html',
+  },
+  {
+    match: 'Build and Release',
+    name: 'Intelligent Build and Release Manager',
+    text: 'A tool that automates and tracks software builds and releases, with a live deployed dashboard. First load may take a moment.',
+    stack: ['Node.js'],
+    live: 'https://intelligent-build-and-release-manager-y7qx.onrender.com',
+  },
+]
+const has = (p, l) => p.name.toLowerCase().includes(l.match.toLowerCase())
+const allProjects = [
+  ...liveProjects.filter((l) => !projects.some((p) => has(p, l))).map(({ match, ...rest }) => rest),
+  ...projects.map((p) => {
+    const l = liveProjects.find((x) => has(p, x))
+    return l ? { ...p, live: l.live } : p
+  }),
+]
+
 function Typing() {
   const [i, setI] = useState(0)
   const [txt, setTxt] = useState('')
@@ -124,7 +151,7 @@ export default function App() {
     e.currentTarget.style.setProperty('--ry', `${((e.clientX - r.left) / r.width - 0.5) * 12}deg`)
   }
   const untilt = (e) => { e.currentTarget.style.setProperty('--rx', '0deg'); e.currentTarget.style.setProperty('--ry', '0deg') }
-  const shown = filter === 'All' ? projects : projects.filter((p) => p.stack.includes(filter))
+  const shown = filter === 'All' ? allProjects : allProjects.filter((p) => p.stack.includes(filter))
 
   useEffect(() => {
     const io = new IntersectionObserver(

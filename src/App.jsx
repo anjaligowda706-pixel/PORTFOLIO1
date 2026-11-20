@@ -245,7 +245,16 @@ export default function App() {
                 <h3>{p.name}</h3>
                 <p>{p.text}</p>
                 <ul className="tags">{p.stack.map((t) => <li key={t}>{t}</li>)}</ul>
-                {p.link && <a href={p.link} target="_blank" rel="noreferrer">View on GitHub</a>}
+                {(p.live || p.link) && (
+                  <div className="links">
+                    {p.live && (
+                      <a className="live-link" href={p.live} target="_blank" rel="noreferrer">
+                        <span className="live" /> Live demo
+                      </a>
+                    )}
+                    {p.link && <a href={p.link} target="_blank" rel="noreferrer">View on GitHub</a>}
+                  </div>
+                )}
               </article>
             ))}
           </div>
